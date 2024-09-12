@@ -15,9 +15,9 @@ Vagrant.configure(2) do |config|
   cidr = "24"
 
   [
-    ["worker1.lan", "1024", "1", "ubuntu/bookworm64", "#{range}1"],
-    ["worker2.lan", "1024", "1", "ubuntu/bookworm6464", "#{range}2"],
-    ["formation.lan", "2048", "2", "ubuntu/bookwrorm64", "#{range}0"],
+    ["worker1.lan", "1024", "1", "debian/bookworm64", "#{range}1"],
+    ["worker2.lan", "1024", "1", "debian/bookworm6464", "#{range}2"],
+    ["formation.lan", "2048", "2", "debian/bookwrorm64", "#{range}0"],
   ].each do |vmname,mem,cpu,os,ip|
     config.vm.define "#{vmname}" do |machine|
 
