@@ -24,11 +24,11 @@ apt-get install -yq \
 
 # téléchargement et install de la clé d'authentification des paquets
 mkdir -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
 # ajout du dépôt docker qui contient les paquets docker à apt
 echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/debian/ubuntu \
   $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
 
 # regénénrer le cache apt pour tenir compte du nouveau dépôt
