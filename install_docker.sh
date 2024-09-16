@@ -28,7 +28,7 @@ curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/
 
 # ajout du dépôt docker qui contient les paquets docker à apt
 echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/debian/ubuntu \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
   $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
 
 # regénénrer le cache apt pour tenir compte du nouveau dépôt
