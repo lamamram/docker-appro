@@ -10,3 +10,8 @@ docker run \
 -d --restart unless-stopped \
 -p 8080:80 \
 nginx:1.27.1-alpine-slim
+
+docker run \
+--name stack-php-8.3-fpm \
+-d --restart unless-stopped \
+bitnami/php-fpm:8.3-debian-12
