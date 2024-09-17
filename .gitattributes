@@ -1,1 +1,3 @@
-* eol=lf
+*.sh eol=lf
+.gitignore eol=lf
+Vagrantfile eol=lf
