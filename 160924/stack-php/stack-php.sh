@@ -26,16 +26,20 @@ docker run \
 --name stack-php-8.3-fpm \
 -d --restart unless-stopped \
 --network stack-php \
+-v ./index.php:/srv/index.php \
 bitnami/php-fpm:8.3-debian-12
 
-docker cp index.php stack-php-8.3-fpm:/srv
+# plus de besoin de cp puisque le "bind mount" -v dans le run est déjà fait
+# docker cp index.php stack-php-8.3-fpm:/srv
 
 docker run \
 --name stack-php-nginx \
 -d --restart unless-stopped \
 --network stack-php \
 -p 8080:80 \
+-v ./vhost.conf:/etc/nginx/conf.d/vhost.conf \
 nginx:1.27.1-alpine-slim
 
-docker cp vhost.conf stack-php-nginx:/etc/nginx/conf.d/vhost.conf
-docker restart stack-php-nginx
+# plus besoin non plus !
+# docker cp vhost.conf stack-php-nginx:/etc/nginx/conf.d/vhost.conf
+# docker restart stack-php-nginx
