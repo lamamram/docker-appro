@@ -42,6 +42,9 @@ services:
       - ./vhost.conf:/etc/nginx/conf.d/vhost.conf:ro
     depends_on:
       - php
+    profiles:
+      # valeurs arbitraires
+      - build
   
   php:
     container_name: stack-php-8.3-fpm
@@ -53,6 +56,9 @@ services:
       - ./index.php:/srv/index.php:ro
     depends_on:
       - db
+    profiles:
+      # valeurs arbitraires
+      - build
 
   db:
     container_name: stack-php-mariadb
@@ -67,10 +73,17 @@ services:
     volumes:
       - ./mariadb-init.sql:/docker-entrypoint-initdb.d/mariadb-init.sql:ro
       - db_data:/var/lib/mysql:Z
+    profiles:
+      # valeurs arbitraires
+      - build
   
   ## je vais raccrocher le volume db_data dans conteneur dans lequel je vais
   # 1. compresser la bdd /var/lib/mysql
   # 2. faire sortir la bdd compressée (avec un bind mount en local par ex.)
+  ## desynchronisation du backup (action one-shot VS le build en arrière plan -d)
+  # 1. utiliser des profiles (build, dump)
+  # 2. build le µservice : docker compose --profile build up -d
+  # 3. lancer le backup en one-shot: docker compose run --rm backup
   backup:
     image: alpine
     # pas de réseau
@@ -80,6 +93,8 @@ services:
       - db_data:/data
       - ./dump:/dump
     command: tar -czvf /dump/dump.tar.gz /data
+    profiles:
+      - dump
     # command: ["tar", "-czvf", "/dump/dump.tar.gz", "/data"]
     # command:
     #   - tar
