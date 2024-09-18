@@ -25,6 +25,13 @@ volumes:
   db_data:
    # fixer le nom du volume
    name: db_data
+  nfs-vol:
+    name: nfs-vol
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.30,ro
+      device: :/mnt/nfs-dir/nginx-conf.d
 
 services:
   # nom du service => associe un ensemble des répliques (replicas) d'un conteneur donné
@@ -39,7 +46,8 @@ services:
     ports:
       - 8080:80
     volumes:
-      - ./vhost.conf:/etc/nginx/conf.d/vhost.conf:ro
+      # - ./vhost.conf:/etc/nginx/conf.d/vhost.conf:ro
+      - nfs-vol:/etc/nginx/conf.d
     depends_on:
       - php
     profiles:
