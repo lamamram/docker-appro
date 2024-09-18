@@ -28,6 +28,9 @@ stack-php
 # 1. regarder la doc de l'image pour qu'un entrypoint soit spécifié
 # 2. sinon regarder l'inspection de l'image docker image inspect => entrypoint / cmd
 # 3. si çà existe => trouver le dossier dans lequel on peut ajouter des confs (avec un volume)
+## option "Z" sur le volume nommé db_data
+# mécanisme lié au module SELINUX du noyau 
+# doit restreindre l'accès au point de montage autres conteneurs
 docker run \
 --name stack-php-mariadb \
 -d --restart unless-stopped \
