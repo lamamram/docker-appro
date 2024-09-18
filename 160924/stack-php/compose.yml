@@ -16,8 +16,8 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.18.0.0/24
-          gateway: 172.18.0.1
+        - subnet: 172.19.0.0/24
+          gateway: 172.19.0.1
 #       - ...
 
 ## on doit déclarer les volumes nommés !!!
@@ -27,7 +27,9 @@ volumes:
    name: db_data
 
 services:
-  stack-php-nginx:
+  # nom du service => associe un ensemble des répliques (replicas) d'un conteneur donné
+  # le service doit gérer les réplicas : nb de replicas, mise à jour de l'image ...
+  web:
     # fixer le nom des conteneurs
     container_name: stack-php-nginx
     image: nginx:1.27.1-alpine-slim
@@ -38,8 +40,10 @@ services:
       - 8080:80
     volumes:
       - ./vhost.conf:/etc/nginx/conf.d/vhost.conf:ro
+    depends_on:
+      - php
   
-  stack-php-8.3-fpm:
+  php:
     container_name: stack-php-8.3-fpm
     image: bitnami/php-fpm:8.3-debian-12
     restart: unless-stopped
@@ -47,8 +51,10 @@ services:
       - stack-php
     volumes:
       - ./index.php:/srv/index.php:ro
+    depends_on:
+      - db
 
-  stack-php-mariadb:
+  db:
     container_name: stack-php-mariadb
     image: mariadb:11.5
     restart: unless-stopped
@@ -61,3 +67,26 @@ services:
     volumes:
       - ./mariadb-init.sql:/docker-entrypoint-initdb.d/mariadb-init.sql:ro
       - db_data:/var/lib/mysql:Z
+  
+  ## je vais raccrocher le volume db_data dans conteneur dans lequel je vais
+  # 1. compresser la bdd /var/lib/mysql
+  # 2. faire sortir la bdd compressée (avec un bind mount en local par ex.)
+  backup:
+    image: alpine
+    # pas de réseau
+    network_mode: none
+    volumes:
+      # le volume existant est injecté dans /data, dossier qui est créé auto.
+      - db_data:/data
+      - ./dump:/dump
+    command: tar -czvf /dump/dump.tar.gz /data
+    # command: ["tar", "-czvf", "/dump/dump.tar.gz", "/data"]
+    # command:
+    #   - tar
+    #   - -czvf
+    #   - /dump/dump.tar.gz
+    #   - /data
+
+
+    
+

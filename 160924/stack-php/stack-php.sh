@@ -30,7 +30,7 @@ stack-php
 # 3. si çà existe => trouver le dossier dans lequel on peut ajouter des confs (avec un volume)
 ## option "Z" sur le volume nommé db_data
 # mécanisme lié au module SELINUX du noyau 
-# doit restreindre l'accès au point de montage autres conteneurs
+# doit restreindre l'accès au point de montage aux autres conteneurs
 docker run \
 --name stack-php-mariadb \
 -d --restart unless-stopped \
