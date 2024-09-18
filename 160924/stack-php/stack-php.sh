@@ -21,23 +21,37 @@ docker network create \
 stack-php
 
 
+############################ CONTAINERS ###################################
+
+docker run \
+--name stack-php-mariadb \
+-d --restart unless-stopped \
+--network stack-php \
+--env MARIADB_USER=test \
+--env MARIADB_PASSWORD=roottoor \
+-e MARIADB_DATABASE=test \
+-e MARIADB_ROOT_PASSWORD=roottoor \
+mariadb:11.5
+
 
 docker run \
 --name stack-php-8.3-fpm \
 -d --restart unless-stopped \
 --network stack-php \
--v ./index.php:/srv/index.php \
+-v ./index.php:/srv/index.php:ro \
 bitnami/php-fpm:8.3-debian-12
 
 # plus de besoin de cp puisque le "bind mount" -v dans le run est déjà fait
 # docker cp index.php stack-php-8.3-fpm:/srv
 
+## -v ...:...:ro => readonly => on ne peut plus modifier les fichiers / dossiers montés
+## depuis le conteneur
 docker run \
 --name stack-php-nginx \
 -d --restart unless-stopped \
 --network stack-php \
 -p 8080:80 \
--v ./vhost.conf:/etc/nginx/conf.d/vhost.conf \
+-v ./vhost.conf:/etc/nginx/conf.d/vhost.conf:ro \
 nginx:1.27.1-alpine-slim
 
 # plus besoin non plus !
