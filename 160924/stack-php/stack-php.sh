@@ -32,12 +32,14 @@ docker run \
 --name stack-php-mariadb \
 -d --restart unless-stopped \
 --network stack-php \
---env MARIADB_USER=test \
---env MARIADB_PASSWORD=roottoor \
--e MARIADB_DATABASE=test \
--e MARIADB_ROOT_PASSWORD=roottoor \
+--env-file .env \
 -v ./mariadb-init.sql:/docker-entrypoint-initdb.d/mariadb-init.sql:ro \
 mariadb:11.5
+
+# --env MARIADB_USER=test \
+# --env MARIADB_PASSWORD=roottoor \
+# --env MARIADB_DATABASE=test \
+# --env MARIADB_ROOT_PASSWORD=roottoor \
 
 
 docker run \
