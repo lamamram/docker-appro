@@ -26,7 +26,7 @@ stack-php
 
 ## mécanisme "entrypoint"
 # 1. regarder la doc de l'image pour qu'un entrypoint soit spécifié
-# 2. sinon regarer l'inspection de l'image docker image inspect => entrypoint / cmd
+# 2. sinon regarder l'inspection de l'image docker image inspect => entrypoint / cmd
 # 3. si çà existe => trouver le dossier dans lequel on peut ajouter des confs (avec un volume)
 docker run \
 --name stack-php-mariadb \
@@ -34,6 +34,7 @@ docker run \
 --network stack-php \
 --env-file .env \
 -v ./mariadb-init.sql:/docker-entrypoint-initdb.d/mariadb-init.sql:ro \
+-v db_data:/var/lib/mysql:Z \
 mariadb:11.5
 
 # --env MARIADB_USER=test \
