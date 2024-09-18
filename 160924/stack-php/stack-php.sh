@@ -11,6 +11,7 @@ if [ $? -eq 0 ]; then
     docker network rm stack-php
 fi
 
+############################ RESEAU ###################################
 
 # création du réseau ad hoc de type bridge avec la conf 172.18.0.0/16 (gateway sur le .0.1)
 # nommé stack-php
@@ -23,6 +24,10 @@ stack-php
 
 ############################ CONTAINERS ###################################
 
+## mécanisme "entrypoint"
+# 1. regarder la doc de l'image pour qu'un entrypoint soit spécifié
+# 2. sinon regarer l'inspection de l'image docker image inspect => entrypoint / cmd
+# 3. si çà existe => trouver le dossier dans lequel on peut ajouter des confs (avec un volume)
 docker run \
 --name stack-php-mariadb \
 -d --restart unless-stopped \
@@ -31,6 +36,7 @@ docker run \
 --env MARIADB_PASSWORD=roottoor \
 -e MARIADB_DATABASE=test \
 -e MARIADB_ROOT_PASSWORD=roottoor \
+-v ./mariadb-init.sql:/docker-entrypoint-initdb.d/mariadb-init.sql:ro \
 mariadb:11.5
 
 
