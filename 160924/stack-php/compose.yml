@@ -1,0 +1,20 @@
+# {"networks": {"stack-php": {"driver": ..., "ipam": {
+#    "config": [
+#       {
+#           "subnet": ..., 
+#           "gateway": ...
+#       },
+#       {...}
+#    ]
+#}}}}
+
+
+networks:
+  stack-php:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+          gateway: 172.18.0.1
+#       - ...
+
