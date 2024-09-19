@@ -21,6 +21,14 @@ docker network create \
 --gateway=172.18.0.1 \
 stack-php
 
+############################ VOLUMES #####################################
+
+docker volume create \
+       --driver local \
+       --opt type=nfs \
+       --opt o=addr=192.168.1.30,ro \
+       --opt device=:/mnt/nfs-dir/nginx-conf.d \
+       nfs-vol-nginx
 
 ############################ CONTAINERS ###################################
 
@@ -63,8 +71,10 @@ docker run \
 -d --restart unless-stopped \
 --network stack-php \
 -p 8080:80 \
--v ./vhost.conf:/etc/nginx/conf.d/vhost.conf:ro \
+-v nfs-vol-nginx:/etc/nginx/conf.d:ro \
 nginx:1.27.1-alpine-slim
+# -v ./vhost.conf:/etc/nginx/conf.d/vhost.conf:ro \
+
 
 # plus besoin non plus !
 # docker cp vhost.conf stack-php-nginx:/etc/nginx/conf.d/vhost.conf
