@@ -1,4 +1,4 @@
-## REM: pour réexécuter le build sans cache docker buildx prune -f --filter=1h 
+## REM: pour réexécuter le build sans cache docker buildx prune -af --filter=1h 
 
 ## on prend un image de base de httpd
 FROM httpd:2.4
