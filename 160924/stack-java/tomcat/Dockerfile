@@ -25,19 +25,19 @@ RUN rm -f /opt/tomcat/apache-tomcat-9.0.95.tar.gz
 RUN yum update -q && yum install -y -q java
 ## et nettoyer le dépôt yum après
 RUN yum clean all && rm -rf /var/cache/yum
-## ajouter un utilisateur tomcat avec le dossier /opt/tomcat comme home et le groupe propriétaire
+## ajouter un utilisateur tomcat sans le dossier home et le groupe propriétaire
+RUN useradd -M -U tomcat
 ## changer le home de l'image vers /opt/tomcat/webapps
-
+WORKDIR /opt/tomcat/webapps
 ## télécharger l'application sample https://tomcat.apache.org/tomcat-10.1-doc/appdev/sample/sample.war dans le dossier home 
-
-## spécifier le propriétaire et groupe à tomcat 
+ADD https://tomcat.apache.org/tomcat-10.1-doc/appdev/sample/sample.war .
+## spécifier le propriétaire et groupe du dossier /opt/tomcat à tomcat 
+RUN chown -R tomcat:tomcat /opt/tomcat
 ## changer l'utilisateur à tomcat
-
-## persister le dossier home pour accéder ou sauvegarder les apps
-
+USER tomcat
+## persister le dossier /opt/tomcat/webapps pour accéder ou sauvegarder les apps
+VOLUME [ "/opt/tomcat/webapps" ]
 ## pour communiquer avec httpd avec le port par défaut de tomcat  ???
+EXPOSE 8080
 
-## exécuter de manière statique (sans substitution) le binaire en foreground catalina.sh vs startup.sh ???
-
-## ajouter la sous commande pour lancer en one shot run ou start ???
-
+CMD [ "/opt/tomcat/bin/catalina.sh", "run" ]
