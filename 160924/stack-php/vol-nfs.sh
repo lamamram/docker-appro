@@ -1,5 +1,6 @@
 #!/bin/bash
-
+## pour réexécuter le script : sudo rm -rf /mnt/nfs-dir /etc/exports
+# puis ./vol-nfs.sh
 if [ -d "/mnt/nfs-dir" ]; then
   exit 0
 fi
