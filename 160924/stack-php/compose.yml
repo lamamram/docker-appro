@@ -25,13 +25,28 @@ volumes:
   db_data:
    # fixer le nom du volume
    name: db_data
-  nfs-vol:
-    name: nfs-vol
+  nfs-vol-nginx:
+    name: nfs-vol-nginx
     driver: local
     driver_opts:
       type: nfs
       o: addr=192.168.1.30,ro
+      # le montage nfs est /mnt/nfs-dir/, Mais on peut se connecter dans un sous dossier !!
       device: :/mnt/nfs-dir/nginx-conf.d
+  nfs-vol-php:
+    name: nfs-vol-php
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.30,ro
+      device: :/mnt/nfs-dir/app
+  nfs-vol-db:
+    name: nfs-vol-db
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=192.168.1.30,ro
+      device: :/mnt/nfs-dir/initdb.d
 
 services:
   # nom du service => associe un ensemble des répliques (replicas) d'un conteneur donné
@@ -47,7 +62,8 @@ services:
       - 8080:80
     volumes:
       # - ./vhost.conf:/etc/nginx/conf.d/vhost.conf:ro
-      - nfs-vol:/etc/nginx/conf.d
+      # ici on fait un point de montage dossier vs dossier
+      - nfs-vol-nginx:/etc/nginx/conf.d
     depends_on:
       - php
     profiles:
@@ -61,7 +77,8 @@ services:
     networks:
       - stack-php
     volumes:
-      - ./index.php:/srv/index.php:ro
+      # - ./index.php:/srv/index.php:ro
+      - nfs-vol-php:/srv
     depends_on:
       - db
     profiles:
@@ -79,7 +96,8 @@ services:
     # environment:
     #   - MARIADB_USER=test
     volumes:
-      - ./mariadb-init.sql:/docker-entrypoint-initdb.d/mariadb-init.sql:ro
+      # - ./mariadb-init.sql:/docker-entrypoint-initdb.d/mariadb-init.sql:ro
+      - nfs-vol-db:/docker-entrypoint-initdb.d
       - db_data:/var/lib/mysql:Z
     profiles:
       # valeurs arbitraires
