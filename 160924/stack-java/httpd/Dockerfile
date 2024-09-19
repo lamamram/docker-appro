@@ -29,5 +29,17 @@ EXPOSE 443
 
 ## spécifier la commande de lancement de l'image personnalisée
 # REM1: in faut toujours trouver la manière de lancer en avant-plan dans le conteneur
-ENTRYPOINT [ "httpd", "-D", "FOREGROUND" ]
+## CAS ENTRYPOINT
+# ENTRYPOINT exécute une commande non substituable par le docker run
+# ENTRYPOINT [ "httpd", "-D", "FOREGROUND" ]
 # ENTRYPOINT [ "httpd-foreground" ]
+# ENTRYPOINT [ "" ] peut neutraliser le ENTRYPOINT de l'image de base
+
+## CAS CMD
+# CMD exécute une commande substituable par le docker run
+CMD [ "httpd", "-D", "FOREGROUND" ]
+
+## CAS ENTRYPOINT + CMD
+# httpd est toujours là dans le docker run mais on peut changer les options
+# ENTRYPOINT [ "httpd"]
+# CMD ["-D", "FOREGROUND"]
