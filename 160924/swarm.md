@@ -111,6 +111,8 @@ par ex.
 * quelque soit le noeud public sur lequel on demande le port publié, on aura accès au service
 * cette disponibilité est assurée par des agents d'équilibrage de charge "load balancer" installé sur tous les noeuds => réseau maiilé => mesh network
 
+* `https://docs.docker.com/engine/swarm/ingress/`
+
 ## relier les conteneur à travers les noeuds (overlay network)
 
 * création sur le manager d'un réseau de type overlay qui couvre tous les noeuds
