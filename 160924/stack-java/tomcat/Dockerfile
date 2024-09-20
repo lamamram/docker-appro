@@ -16,6 +16,7 @@ LABEL stack.image="tomcat"
 # exploitables dans le DOCKER RUN
 ENV USER=tomcat
 
+# création d'arguments exploitables dans le DOCKER BUILD
 ARG TOMCAT_VERSION_MAJOR=9
 ARG TOMCAT_VERSION_FULL
 
