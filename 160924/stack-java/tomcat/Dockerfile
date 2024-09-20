@@ -13,9 +13,10 @@ LABEL stack="java"
 LABEL stack.image="tomcat"
 
 
-## BONNE PRATIQUES
-# 1. minimiser le nb de couches => instructions
-# 2. les ations de créations / modifications / suppresions dans les même couches
+## BONNES PRATIQUES
+# 1. minimiser le nb de couches => instructions => Chaîner les RUN avec &&, ADD => RUN curl, ...
+# 2. les actions de créations / modifications / suppressions devraient être mises dans les même couches
+# => à cause du mécanisme de Copy On Write (COW)
 ## ajouter un dossier /opt/tomcat
 ## injecter le fichier https://downloads.apache.org/tomcat/tomcat-9/v9.0.95/bin/apache-tomcat-9.0.95.tar.gz dans ce dossier
 ## décomprésser dans ce dossier sans dossier intermédiaire
@@ -34,9 +35,9 @@ RUN yum update -q && yum install -y -q java && \
 ## changer le home de l'image vers /opt/tomcat/webapps
 WORKDIR /opt/tomcat/webapps
 ## télécharger l'application sample https://tomcat.apache.org/tomcat-10.1-doc/appdev/sample/sample.war dans le dossier home 
-ADD https://tomcat.apache.org/tomcat-10.1-doc/appdev/sample/sample.war .
-## spécifier le propriétaire et groupe du dossier /opt/tomcat à tomcat 
-RUN chown -R tomcat:tomcat /opt/tomcat
+
+
+
 ## changer l'utilisateur à tomcat
 USER tomcat
 ## persister le dossier /opt/tomcat/webapps pour accéder ou sauvegarder les apps
@@ -45,3 +46,4 @@ VOLUME [ "/opt/tomcat/webapps" ]
 EXPOSE 8080
 
 CMD [ "/opt/tomcat/bin/catalina.sh", "run" ]
+
