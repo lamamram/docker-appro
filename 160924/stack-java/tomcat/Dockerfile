@@ -60,6 +60,7 @@ CMD [ "/opt/tomcat/bin/catalina.sh", "run" ]
 # pour lancer CMD du HEALTHCHECK avec un timeout de 5s,
 # si le CMD est vrai (exit-code 0) => le docker ps donne un STATUS (healthy),
 # sinon on peut réessayer 3x (retries), avec une durée d'attente de 3s(interval)
+# après le docker run  => 3s => docker ps => docker inspect stack-java-tomcat --format "{{ .State.Health.Status }}" 
 HEALTHCHECK \
             --start-period=3s \
             --timeout=5s \
