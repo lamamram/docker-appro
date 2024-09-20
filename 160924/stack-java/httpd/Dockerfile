@@ -10,6 +10,7 @@ LABEL created_at.year="2024"
 LABEL stack="java"
 LABEL stack.image="httpd"
 
+ARG VHOST=java_app
 
 ## injecter une configuration princicpale personnalisée
 COPY ./httpd.conf /usr/local/apache2/conf/httpd.conf
@@ -18,7 +19,7 @@ COPY ./httpd.conf /usr/local/apache2/conf/httpd.conf
 RUN mkdir /usr/local/apache2/conf/sites
 
 ## injecter le vhost de l'application java
-
+COPY ./${VHOST}.conf /usr/local/apache2/conf/sites
 
 
 ## Déclarer les ports sur lesquels httpd va écouter
