@@ -12,6 +12,12 @@ LABEL created_at.year="2024"
 LABEL stack="java"
 LABEL stack.image="tomcat"
 
+# création et / ou de modification de variables d'environnement 
+# exploitables dans le DOCKER RUN
+ENV USER=tomcat
+
+ARG TOMCAT_VERSION_MAJOR=9
+ARG TOMCAT_VERSION_FULL
 
 ## BONNES PRATIQUES
 # 1. minimiser le nb de couches => instructions => Chaîner les RUN avec &&, ADD => RUN curl, ...
@@ -28,7 +34,7 @@ LABEL stack.image="tomcat"
 ## ajouter un utilisateur tomcat sans le dossier home et le groupe propriétaire
 ## télécharger l'application sample https://tomcat.apache.org/tomcat-10.1-doc/appdev/sample/sample.war dans le dossier home 
 RUN mkdir /opt/tomcat && \
-    curl https://downloads.apache.org/tomcat/tomcat-9/v9.0.95/bin/apache-tomcat-9.0.95.tar.gz | \
+    curl https://downloads.apache.org/tomcat/tomcat-${TOMCAT_VERSION_MAJOR}/v${TOMCAT_VERSION_FULL}/bin/apache-tomcat-${TOMCAT_VERSION_FULL}.tar.gz | \
     tar -xvz -C /opt/tomcat --strip-components=1 && \
     yum update -q && yum install -y -q java-1.8.0-openjdk-headless && \
     yum clean all && rm -rf /var/cache/yum && \
@@ -39,7 +45,7 @@ RUN mkdir /opt/tomcat && \
 ## changer le home de l'image vers /opt/tomcat/webapps
 WORKDIR /opt/tomcat/webapps
 ## changer l'utilisateur à tomcat
-USER tomcat
+USER ${USER}
 ## persister le dossier /opt/tomcat/webapps pour accéder ou sauvegarder les apps
 VOLUME [ "/opt/tomcat/webapps" ]
 ## pour communiquer avec httpd avec le port par défaut de tomcat  ???
