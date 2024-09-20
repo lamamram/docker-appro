@@ -1,6 +1,8 @@
 ## REM: par défaut: 
 ## si l'image est absente en local => build
 ## si l'image est présente en local => on l'utilise SAUF avec docker compose up --build -d
+## docker compose build
+## docker login ... && docker compose push
 
 
 networks:
@@ -15,7 +17,7 @@ networks:
 services:
   httpd:
     container_name: stack-java-httpd
-    image: stack-java-httpd:0.1
+    image: 192.168.1.30:443/stack-java-httpd:0.1
     build:
       context: ./httpd
       dockerfile: Dockerfile
@@ -36,7 +38,7 @@ services:
       dockerfile: Dockerfile
       args:
         - TOMCAT_VERSION_FULL=${TOMCAT_VERSION_FULL:-9.0.95}
-    image: stack-java-tomcat:0.1
+    image: 192.168.1.30:443/stack-java-tomcat:0.1
     restart: unless-stopped
     networks:
       - stack-java

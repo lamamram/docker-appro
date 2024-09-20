@@ -17,6 +17,8 @@
 2. pousser une fois qu'on sera autentifié
    `docker push <new_reference>`
 
+   * ou build et push on un coup `docker build -t <nom_de_domaine:port>/name/space/<basename>:<tag> --push .`
+
 3. utiliser l'image depuis `docker pull`
 
 ## utilisation du TLS
