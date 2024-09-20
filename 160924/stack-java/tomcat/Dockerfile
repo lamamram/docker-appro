@@ -16,28 +16,27 @@ LABEL stack.image="tomcat"
 ## BONNES PRATIQUES
 # 1. minimiser le nb de couches => instructions => Chaîner les RUN avec &&, ADD => RUN curl, ...
 # 2. les actions de créations / modifications / suppressions devraient être mises dans les même couches
+# 3. privilégier les actions utilisant les flux ( | ) aux actions utilisant des fichiers ( && )
 # => à cause du mécanisme de Copy On Write (COW)
 ## ajouter un dossier /opt/tomcat
 ## injecter le fichier https://downloads.apache.org/tomcat/tomcat-9/v9.0.95/bin/apache-tomcat-9.0.95.tar.gz dans ce dossier
 ## décomprésser dans ce dossier sans dossier intermédiaire
 ## et supprimer l'archive
-RUN mkdir /opt/tomcat && \
-    curl https://downloads.apache.org/tomcat/tomcat-9/v9.0.95/bin/apache-tomcat-9.0.95.tar.gz -o /opt/tomcat/ && \
-    tar -xvzf /opt/tomcat/apache-tomcat-9.0.95.tar.gz -C /opt/tomcat --strip-components=1 && \
-    rm -f /opt/tomcat/apache-tomcat-9.0.95.tar.gz
-
 ## installer java (yum)
 ## et nettoyer le dépôt yum après
 ## ajouter un utilisateur tomcat sans le dossier home et le groupe propriétaire
-RUN yum update -q && yum install -y -q java && \
+## télécharger l'application sample https://tomcat.apache.org/tomcat-10.1-doc/appdev/sample/sample.war dans le dossier home 
+RUN mkdir /opt/tomcat && \
+    curl https://downloads.apache.org/tomcat/tomcat-9/v9.0.95/bin/apache-tomcat-9.0.95.tar.gz | \
+    tar -xvz -C /opt/tomcat --strip-components=1 && \
+    yum update -q && yum install -y -q java && \
     yum clean all && rm -rf /var/cache/yum && \
-    useradd -M -U tomcat
+    useradd -M -U tomcat && \
+    curl https://tomcat.apache.org/tomcat-10.1-doc/appdev/sample/sample.war -o /opt/tomcat/webapps/sample.war && \
+    chown -R tomcat:tomcat /opt/tomcat
+
 ## changer le home de l'image vers /opt/tomcat/webapps
 WORKDIR /opt/tomcat/webapps
-## télécharger l'application sample https://tomcat.apache.org/tomcat-10.1-doc/appdev/sample/sample.war dans le dossier home 
-
-
-
 ## changer l'utilisateur à tomcat
 USER tomcat
 ## persister le dossier /opt/tomcat/webapps pour accéder ou sauvegarder les apps
