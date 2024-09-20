@@ -24,7 +24,7 @@ ARG TOMCAT_VERSION_FULL
 # 1. minimiser le nb de couches => instructions => Chaîner les RUN avec &&, ADD => RUN curl, ...
 # 2. les actions de créations / modifications / suppressions devraient être mises dans les même couches
 # 3. privilégier les actions utilisant les flux ( | ) aux actions utilisant des fichiers ( && )
-# 4. privilégier les paquets le plus légérs (ex java jdk -> jre)
+# 4. privilégier les paquets les plus légers (ex java jdk -> jre)
 # => à cause du mécanisme de Copy On Write (COW)
 ## ajouter un dossier /opt/tomcat
 ## injecter le fichier https://downloads.apache.org/tomcat/tomcat-9/v9.0.95/bin/apache-tomcat-9.0.95.tar.gz dans ce dossier
@@ -54,3 +54,15 @@ EXPOSE 8080
 ## catalina => foreground, run sur la même session
 CMD [ "/opt/tomcat/bin/catalina.sh", "run" ]
 
+# warning: le CMD de HEALTHCHECK est allérgique du lancement de type tokens ["", ""]
+# après le lancement du CMD précédent (docker run),
+# on attent 3s (start-period)
+# pour lancer CMD du HEALTHCHECK avec un timeout de 5s,
+# si le CMD est vrai (exit-code 0) => le docker ps donne un STATUS (healthy),
+# sinon on peut réessayer 3x (retries), avec une durée d'attente de 3s(interval)
+HEALTHCHECK \
+            --start-period=3s \
+            --timeout=5s \
+            --retries=3 \
+            --interval=3s \
+            CMD grep "Server startup" /opt/tomcat/logs/catalina.*.log
