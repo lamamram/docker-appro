@@ -1,3 +1,7 @@
+## REM: par défaut: 
+## si l'image est absente en local => build
+## si l'image est présente en local => on l'utilise SAUF avec docker compose up --build -d
+
 
 networks:
   stack-java:
