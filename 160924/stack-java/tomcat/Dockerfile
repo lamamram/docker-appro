@@ -17,6 +17,7 @@ LABEL stack.image="tomcat"
 # 1. minimiser le nb de couches => instructions => Chaîner les RUN avec &&, ADD => RUN curl, ...
 # 2. les actions de créations / modifications / suppressions devraient être mises dans les même couches
 # 3. privilégier les actions utilisant les flux ( | ) aux actions utilisant des fichiers ( && )
+# 4. privilégier les paquets le plus légérs (ex java jdk -> jre)
 # => à cause du mécanisme de Copy On Write (COW)
 ## ajouter un dossier /opt/tomcat
 ## injecter le fichier https://downloads.apache.org/tomcat/tomcat-9/v9.0.95/bin/apache-tomcat-9.0.95.tar.gz dans ce dossier
@@ -29,7 +30,7 @@ LABEL stack.image="tomcat"
 RUN mkdir /opt/tomcat && \
     curl https://downloads.apache.org/tomcat/tomcat-9/v9.0.95/bin/apache-tomcat-9.0.95.tar.gz | \
     tar -xvz -C /opt/tomcat --strip-components=1 && \
-    yum update -q && yum install -y -q java && \
+    yum update -q && yum install -y -q java-1.8.0-openjdk-headless && \
     yum clean all && rm -rf /var/cache/yum && \
     useradd -M -U tomcat && \
     curl https://tomcat.apache.org/tomcat-10.1-doc/appdev/sample/sample.war -o /opt/tomcat/webapps/sample.war && \
@@ -43,6 +44,6 @@ USER tomcat
 VOLUME [ "/opt/tomcat/webapps" ]
 ## pour communiquer avec httpd avec le port par défaut de tomcat  ???
 EXPOSE 8080
-
+## catalina => foreground, run sur la même session
 CMD [ "/opt/tomcat/bin/catalina.sh", "run" ]
 
