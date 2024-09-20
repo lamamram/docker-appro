@@ -12,6 +12,11 @@ services:
   httpd:
     container_name: stack-java-httpd
     image: stack-java-httpd:0.1
+    build:
+      context: ./httpd
+      dockerfile: Dockerfile
+      # build sans cache
+      # no_cache: true
     restart: unless-stopped
     networks:
       - stack-java
@@ -22,6 +27,11 @@ services:
 
   tomcat:
     container_name: stack-java-tomcat
+    build:
+      context: ./tomcat
+      dockerfile: Dockerfile
+      args:
+        - TOMCAT_VERSION_FULL=${TOMCAT_VERSION_FULL:-9.0.95}
     image: stack-java-tomcat:0.1
     restart: unless-stopped
     networks:
