@@ -17,7 +17,8 @@ networks:
 services:
   httpd:
     container_name: stack-java-httpd
-    image: 192.168.1.30:443/stack-java-httpd:0.1
+      # image: 192.168.1.30:443/stack-java-httpd:0.1
+    image: stack-java-httpd:0.1
     build:
       context: ./httpd
       dockerfile: Dockerfile
@@ -30,6 +31,10 @@ services:
       - 8081:80
     depends_on:
       - tomcat
+    develop:
+      watch:
+        - action: rebuild
+          path: ./httpd/java_app.conf
 
   tomcat:
     container_name: stack-java-tomcat
@@ -38,7 +43,16 @@ services:
       dockerfile: Dockerfile
       args:
         - TOMCAT_VERSION_FULL=${TOMCAT_VERSION_FULL:-9.0.95}
-    image: 192.168.1.30:443/stack-java-tomcat:0.1
+    # image: 192.168.1.30:443/stack-java-tomcat:0.1
+    image: stack-java-tomcat:0.1
     restart: unless-stopped
+    # volumes:
+    #   - ./tomcat/fic:/opt/tomcat/fic
     networks:
       - stack-java
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./tomcat/sample.war
+          target: /opt/tomcat/webapps/sample.war
+        # --watch ne fonctionne pas avec les bind mounts !!!

@@ -38,6 +38,9 @@ Vagrant.configure(2) do |config|
       # lancer l'install de docker dès le lancement
       machine.vm.provision "shell", 
         path: "install_docker.sh"
+      machine.vm.provision "shell", 
+        path: "install_docker_scout.sh",
+        privileged: false
     end
   end
 end

@@ -2,7 +2,7 @@
 ## pour réexécuter le script : sudo rm -rf /mnt/nfs-dir /etc/exports
 # puis ./vol-nfs.sh
 if [ -d "/mnt/nfs-dir" ]; then
-  exit 0
+  rm -rf /mnt/nfs-dir && rm -rf /etc/exports
 fi
 
 # conf "vanilla" pas prod !!!
