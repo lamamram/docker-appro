@@ -8,15 +8,15 @@
 # access-token: myusine xYph6TpAt1yJ1hJiS3QN
 Vagrant.configure(2) do |config|
   # interface réseau à utiliser (ipconfig /all | ip a)
-  interface = "Intel(R) Ethernet Connection (7) I219-LM #2"
+  interface = "Intel(R) Ethernet Connection (7) I219-V"
   # gamme d'ip à utiliser
   range = "192.168.1.3"
   # masque de sous réseau
   cidr = "24"
 
   [
-    ["worker1.lan", "1024", "1", "debian/bookworm64", "#{range}1"],
-    ["worker2.lan", "1024", "1", "debian/bookworm64", "#{range}2"],
+    #["worker1.lan", "1024", "1", "debian/bookworm64", "#{range}1"],
+    #["worker2.lan", "1024", "1", "debian/bookworm64", "#{range}2"],
     ["formation.lan", "2048", "2", "debian/bookworm64", "#{range}0"],
   ].each do |vmname,mem,cpu,os,ip|
     config.vm.define "#{vmname}" do |machine|
