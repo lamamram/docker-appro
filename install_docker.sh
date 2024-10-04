@@ -45,8 +45,6 @@ apt-get install -yq \
 # autorisé à exécuter des commandes docker sans sudo
 usermod -aG docker vagrant
 
-curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > ~/.git-completion.bash
-curl -o ~/.git-prompt.sh https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
 
 
 
