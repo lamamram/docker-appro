@@ -1,3 +1,4 @@
 *.sh eol=lf
 .gitignore eol=lf
 Vagrantfile eol=lf
+*.py eol=lf
