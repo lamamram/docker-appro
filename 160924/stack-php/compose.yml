@@ -102,6 +102,7 @@ services:
     profiles:
       # valeurs arbitraires
       - build
+      # - hot-dump
   
   ## je vais raccrocher le volume db_data dans conteneur dans lequel je vais
   # 1. compresser la bdd /var/lib/mysql
@@ -127,6 +128,21 @@ services:
     #   - -czvf
     #   - /dump/dump.tar.gz
     #   - /data
+
+## clumsy !!!!
+  # hot-dump:
+  #   image: alpine
+  #   networks:
+  #     - stack-php
+  #   volumes_from:
+  #     - db
+  #   volumes:
+  #     - ./dump:/dump
+  #   command: tar -czvf /dump/hot-dump.tar.gz /var/lib/mysql
+  #   depends_on:
+  #     - db
+  #   profiles:
+  #     - hot-dump
 
 
     
