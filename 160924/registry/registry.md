@@ -62,11 +62,18 @@ curl -kX GET \
      -u "testuser:password" \
      https://formation.lan:443/v2/multiplat/manifests/latest
 
-# see digests directly + header accept v2 => response headers
-curl -kIX GET \
+# see digests directly + header accept v2 => response headers (--I) (-s silent) (-k : disable tls)
+curl -skIX GET \
      -u "testuser:password" \
      -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
-     https://formation.lan:443/v2/multiplat/manifests/latest
+     https://formation.lan:443/v2/multiplat/manifests/latest | awk '/^Docker-Content-Digest/ {print $2}'
+
+# IDEM pour multi-platform build
+curl -skIX GET \
+     -u "testuser:password" \
+     -H "Accept: application/vnd.oci.image.manifest.v1+json" \
+     -H "Accept: application/vnd.oci.image.index.v1+json" \
+     https://formation.lan:443/v2/multiplat/manifests/latest | awk '/^Docker-Content-Digest/ {print $2}'
 
 # soft delete tag
 curl -kX DELETE \
@@ -74,5 +81,5 @@ curl -kX DELETE \
      https://formation.lan:443/v2/multiplat/manifests/<v2_digest>
 
 # hard delete
-docker compose exec registry bin/registry garbage-collector /etc/docker/registry/config.yml 
+docker compose exec registry bin/registry garbage-collect /etc/docker/registry/config.yml 
 ```
