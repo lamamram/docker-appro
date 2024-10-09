@@ -3,7 +3,7 @@
 
 ## nous allons utiliser une image centos 9: quay.io/centos/centos:stream9
 
-FROM quay.io/centos/centos:stream9
+FROM debian:12-slim
 
 ## documenter l'image
 LABEL author="mlamamra"
@@ -34,11 +34,11 @@ ARG TOMCAT_VERSION_FULL
 ## et nettoyer le dépôt yum après
 ## ajouter un utilisateur tomcat sans le dossier home et le groupe propriétaire
 ## télécharger l'application sample https://tomcat.apache.org/tomcat-10.1-doc/appdev/sample/sample.war dans le dossier home 
-RUN mkdir /opt/tomcat && \
+RUN apt-get update -q && apt-get install -y -q curl default-jre-headless && \
+    rm -rf /var/lib/apt/lists/* && \
+    mkdir /opt/tomcat && \
     curl https://downloads.apache.org/tomcat/tomcat-${TOMCAT_VERSION_MAJOR}/v${TOMCAT_VERSION_FULL}/bin/apache-tomcat-${TOMCAT_VERSION_FULL}.tar.gz | \
-    tar -xvz -C /opt/tomcat --strip-components=1 && \
-    yum update -q && yum install -y -q java-1.8.0-openjdk-headless && \
-    yum clean all && rm -rf /var/cache/yum && \
+    tar -xvz -C /opt/tomcat --strip-components=1 && \    
     useradd -M -U tomcat && \
     curl https://tomcat.apache.org/tomcat-10.1-doc/appdev/sample/sample.war -o /opt/tomcat/webapps/sample.war && \
     chown -R tomcat:tomcat /opt/tomcat

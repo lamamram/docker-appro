@@ -2,3 +2,9 @@
 .gitignore eol=lf
 Vagrantfile eol=lf
 *.py eol=lf
+*.crt eol=lf
+*.cnf eol=lf
+*.key eol=lf
+*.yml eol=lf
+*.conf eol=lf
+Dockerfile eol=lf

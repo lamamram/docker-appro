@@ -1,0 +1,13 @@
+services:
+  jupyter:
+    container_name: test-x11
+    image: test-x11:1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DISPLAY: $DISPLAY
+    hostname: ${HOSTNAME} 
+    volumes:
+      - /tmp/.X11-unix/:/tmp/.X11-unix
+      - $HOME/.Xauthority:${HOME}/.Xauthority

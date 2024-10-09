@@ -41,6 +41,14 @@ apt-get install -yq \
     containerd.io \
     docker-compose-plugin
 
+cat <<EOF > /etc/docker/daemon.json
+{
+  "insecure-registries": ["127.0.0.1:443","formation.lan:443"]
+}
+EOF
+
+systemctl restart docker
+
 # ajout de l'utilisateur vagrant au groupe docker 
 # autorisé à exécuter des commandes docker sans sudo
 usermod -aG docker vagrant

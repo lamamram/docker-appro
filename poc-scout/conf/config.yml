@@ -21,8 +21,6 @@ log:
 storage:
   filesystem:
     rootdirectory: /var/lib/registry
-  delete:
-    enabled: true
   # azure:
   # gcs:
   # s3:

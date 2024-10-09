@@ -39,34 +39,8 @@ ajouter le certificat côté client (autorité de certification locale)
 ```
 cd /vagrant/registry
 sudo mkdir -p /etc/docker/certs.d/formation.lan:443
-sudo cp  certs/registry.crt /etc/docker/certs.d/formation.lan:443/ca.crt
+sudo cp certs/registry.crt /etc/docker/certs.d/formation.lan:443/ca.crt
 ```
 
 refabriquer un htpasswd utiliser un container httpd => 
 `htpasswd -Bbn testuser password > htpasswd`
-
-### API
-
-```
-curl -k \
-     -X GET \
-	 -u "testuser:password" \
-	 https://127.0.0.1:443/v2/<img_name>/tags/list
-	 
-curl -k \
-     -X GET \
-	 -u "testuser:password" \
-	 https://127.0.0.1:443/v2/<img_name>/manifests/<tag>
-	 
-## get manifest sha256:xxxxxxx
-curl -kIX GET -u "testuser:password" //
-
-
-curl -kIX DELETE \
-	 -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
-	 -u "testuser:password" \
-	 https://127.0.0.1:443/v2/<img_name>/manifests/<digest_hash>
-	 
-# supression phys. sur le systeme de fichier
-docker compose exec -it registry bin/registry garbage-collect /etc/docker/registry/config.yml	 
-```
