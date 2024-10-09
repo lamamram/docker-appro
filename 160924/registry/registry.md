@@ -6,7 +6,6 @@
 * gestion d'une authentfication
 
 * `docker login URL du registre https ou :5000 avec --username --password`
-* `echo "password" | docker login 127.0.0.1:443 -u testuser --password-stdin`
 
 ## utilisations des images
 
@@ -45,28 +44,35 @@ sudo cp  certs/registry.crt /etc/docker/certs.d/formation.lan:443/ca.crt
 refabriquer un htpasswd utiliser un container httpd => 
 `htpasswd -Bbn testuser password > htpasswd`
 
-### API
+### api registry
 
-```
-curl -k \
-     -X GET \
-	 -u "testuser:password" \
-	 https://127.0.0.1:443/v2/<img_name>/tags/list
-	 
-curl -k \
-     -X GET \
-	 -u "testuser:password" \
-	 https://127.0.0.1:443/v2/<img_name>/manifests/<tag>
-	 
-## get manifest sha256:xxxxxxx
-curl -kIX GET -u "testuser:password" //
+```bash
+# see images
+curl -kX GET \
+     -u "testuser:password" \
+     https://formation.lan:443/v2/_catalog
 
+# see tags of an image
+curl -kX GET \
+     -u "testuser:password" \
+     https://formation.lan:443/v2/multiplat/tags/list
 
-curl -kIX DELETE \
-	 -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
-	 -u "testuser:password" \
-	 https://127.0.0.1:443/v2/<img_name>/manifests/<digest_hash>
-	 
-# supression phys. sur le systeme de fichier
-docker compose exec -it registry bin/registry garbage-collect /etc/docker/registry/config.yml	 
+# see digests conten of a tag
+curl -kX GET \
+     -u "testuser:password" \
+     https://formation.lan:443/v2/multiplat/manifests/latest
+
+# see digests directly + header accept v2 => response headers
+curl -kIX GET \
+     -u "testuser:password" \
+     -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+     https://formation.lan:443/v2/multiplat/manifests/latest
+
+# soft delete tag
+curl -kX DELETE \
+     -u "testuser:password" \
+     https://formation.lan:443/v2/multiplat/manifests/<v2_digest>
+
+# hard delete
+docker compose exec registry bin/registry garbage-collector /etc/docker/registry/config.yml 
 ```
