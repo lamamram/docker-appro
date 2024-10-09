@@ -73,7 +73,7 @@ curl -skIX GET \
      -u "testuser:password" \
      -H "Accept: application/vnd.oci.image.manifest.v1+json" \
      -H "Accept: application/vnd.oci.image.index.v1+json" \
-     https://formation.lan:443/v2/multiplat/manifests/latest | awk '/^Docker-Content-Digest/ {print $2}'
+     https://formation.lan:443/v2/multiplat/manifests/latest | awk '/^docker-content-digest/ {print $2}'
 
 # soft delete tag
 curl -kX DELETE \
