@@ -12,6 +12,9 @@ if [ $ret -eq 0 ]; then
   exit 0
 fi
 
+# DISTRO=$(cat /etc/os-release | awk -F '=' '$1 == "ID" { print $2 }')
+# CODENAME=$(cat /etc/os-release | awk -F '=' '$1 == "VERSION_CODENAME" { print $2 }')
+
 # génération du cachec apt
 apt-get update -q
 
@@ -22,13 +25,16 @@ apt-get install -yq \
     gnupg \
     lsb-release
 
+# distro=$(echo "$(lsb_release -is)" | awk '{print tolower($0)}')
+distro=$(lsb_release -is)
+
 # téléchargement et install de la clé d'authentification des paquets
 mkdir -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+curl -fsSL https://download.docker.com/linux/${distro,,}/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
 # ajout du dépôt docker qui contient les paquets docker à apt
 echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${distro,,} \
   $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
 
 # regénénrer le cache apt pour tenir compte du nouveau dépôt
